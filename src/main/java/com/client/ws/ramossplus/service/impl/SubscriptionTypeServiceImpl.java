@@ -1,12 +1,15 @@
 package com.client.ws.ramossplus.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.client.ws.ramossplus.dto.SubscriptionTypeDto;
+import com.client.ws.ramossplus.exception.BadRequestException;
 import com.client.ws.ramossplus.exception.NotFoundException;
+import com.client.ws.ramossplus.mapper.SubscriptionTypeMapper;
 import com.client.ws.ramossplus.model.SubscriptionType;
 import com.client.ws.ramossplus.repository.SubscriptionTypeRepository;
 import com.client.ws.ramossplus.service.SubscriptionTypeService;
@@ -27,34 +30,36 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService{
 
 	@Override
 	public SubscriptionType findById(Long id) {
+		return getSubscriptionType(id);
+	}
+
+	@Override
+	public SubscriptionType create(SubscriptionTypeDto dto) {
+		if(Objects.nonNull(dto.getId())) {
+			throw new BadRequestException("Id deve ser nulo");
+		}
+		return subscriptionTypeRepository.save(SubscriptionTypeMapper.fromDtoToEntity(dto));
+	}
+
+	@Override
+	public SubscriptionType update(Long id, SubscriptionTypeDto dto) {
+		getSubscriptionType(id);
+		dto.setId(id);
+		return subscriptionTypeRepository.save(SubscriptionTypeMapper.fromDtoToEntity(dto));
+	}
+
+	@Override
+	public void delete(Long id) {
+		getSubscriptionType(id);
+		subscriptionTypeRepository.deleteById(id);
+	}
+	
+	private SubscriptionType getSubscriptionType(Long id) {
 		Optional<SubscriptionType> optionalSubscriptionType = subscriptionTypeRepository.findById(id);
 		if (optionalSubscriptionType.isEmpty()) {
 			throw new NotFoundException("SubscriptionType não encontrado");
 		}
 		return optionalSubscriptionType.get();
-	}
-
-	@Override
-	public SubscriptionType create(SubscriptionTypeDto dto) {
-		return subscriptionTypeRepository.save(SubscriptionType.builder()
-					.id(dto.getId())
-					.name(dto.getName())
-					.accessMonth(dto.getAccessMonth())
-					.price(dto.getPrice())
-					.productKey(dto.getProductKey())
-				.build());
-	}
-
-	@Override
-	public SubscriptionType update(Long id, SubscriptionType subscriptionType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void delete(Long id) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
