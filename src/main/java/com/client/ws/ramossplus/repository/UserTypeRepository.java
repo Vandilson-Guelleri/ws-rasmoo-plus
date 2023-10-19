@@ -8,6 +8,6 @@ import com.client.ws.ramossplus.model.UserPaymentInfo;
 import com.client.ws.ramossplus.model.UserType;
 
 @Repository
-public interface UserTypeRepository extends JpaRepository<UserPaymentInfo, Long>{
+public interface UserTypeRepository extends JpaRepository<UserType, Long>{
 
 }

@@ -7,6 +7,6 @@ import com.client.ws.ramossplus.model.SubscriptionType;
 import com.client.ws.ramossplus.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<SubscriptionType, Long>{
+public interface UserRepository extends JpaRepository<User, Long>{
 
 }
